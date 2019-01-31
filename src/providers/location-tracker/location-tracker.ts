@@ -3,7 +3,7 @@ import {BackgroundGeolocation, BackgroundGeolocationConfig} from '@ionic-native/
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
-
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class LocationTrackerProvider {
@@ -11,14 +11,14 @@ export class LocationTrackerProvider {
   public watch: any;
   public lat: number = 0;
   public lng: number = 0;
-
+  public socket;
 
   constructor(
     public zone: NgZone,
     public backgroundGeolocation: BackgroundGeolocation,
     public geolocation: Geolocation
   ) {
-
+    this.socket = io('https://ionic-location-sample.herokuapp.com/');
   }
 
   public startTracking() {
@@ -39,6 +39,13 @@ export class LocationTrackerProvider {
       this.zone.run(() => {
         this.lat = location.latitude;
         this.lng = location.longitude;
+        this.socket.emit('location',{
+          longitude: location.longitude,
+          latitude : location.latitude,
+          timestamp : null,
+          speed : null,
+          username: "background geolocation"
+        });
       });
     }, (err) => {
       console.log(err);
@@ -58,6 +65,13 @@ export class LocationTrackerProvider {
       this.zone.run(() => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
+        this.socket.emit('location',{
+          longitude: position.coords.longitude,
+          latitude : position.coords.latitude,
+          timestamp : position.timestamp,
+          speed : position.coords.speed,
+          username: "geolocation"
+        });
       });
     });
   }

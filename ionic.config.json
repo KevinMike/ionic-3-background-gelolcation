@@ -1,5 +1,7 @@
 {
   "name": "ionic2-background-geolocation",
-  "app_id": "",
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }
