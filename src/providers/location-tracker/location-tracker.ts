@@ -46,6 +46,7 @@ export class LocationTrackerProvider {
           speed : null,
           username: "background geolocation"
         });
+        this.backgroundGeolocation.finish(); // FOR IOS ONLY
       });
     }, (err) => {
       console.log(err);
